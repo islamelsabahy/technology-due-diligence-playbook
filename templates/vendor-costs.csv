@@ -1,0 +1,3 @@
+vendor_id,service,criticality,annualized_cost,renewal_date,notice_days,risk_level
+DEMO-VND-001,Demo Cloud Platform,High,1200000,2027-02-01,90,Medium
+DEMO-VND-002,Demo Support Service,Medium,480000,2026-12-15,60,Low

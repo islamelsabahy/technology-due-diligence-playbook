@@ -1,0 +1,3 @@
+application_id,name,criticality,hosting,vendor,technical_health,business_fit,target_disposition
+DEMO-APP-001,Demo ERP,Critical,Cloud,Demo Vendor,Good,High,Retain
+DEMO-APP-002,Demo Legacy Reporting,Medium,On-Prem,Sample Vendor,Poor,Low,Replace

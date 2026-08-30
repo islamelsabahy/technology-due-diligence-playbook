@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TechnologyCostNormalization",
+  "type": "object",
+  "required": [
+    "cost_category",
+    "current_run_rate",
+    "normalized_run_rate"
+  ],
+  "properties": {
+    "cost_category": {
+      "type": "string"
+    },
+    "current_run_rate": {
+      "type": "number",
+      "minimum": 0
+    },
+    "normalized_run_rate": {
+      "type": "number",
+      "minimum": 0
+    },
+    "one_time_remediation": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    }
+  }
+}

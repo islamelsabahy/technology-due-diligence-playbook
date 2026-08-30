@@ -1,0 +1,6 @@
+cost_category,current_run_rate,normalized_run_rate,one_time_remediation
+People,3500000,3600000,250000
+Software,2800000,2600000,500000
+Cloud & Hosting,1900000,1800000,300000
+Security,900000,1200000,650000
+Services,1500000,1100000,400000

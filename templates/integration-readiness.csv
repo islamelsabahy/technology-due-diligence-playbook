@@ -1,0 +1,7 @@
+dimension,score,weight,key_issue,status
+Identity,4,15,Demo federation work required,Amber
+Applications,3,20,Overlapping systems require disposition,Amber
+Data,2,20,Master-data alignment needed,Red
+Cybersecurity,4,20,Control harmonization required,Amber
+Organization,3,10,Capacity constraints,Amber
+Infrastructure,4,15,Connectivity validation pending,Amber

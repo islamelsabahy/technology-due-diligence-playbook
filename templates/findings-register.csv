@@ -1,0 +1,3 @@
+finding_id,domain,finding,severity,business_impact,transaction_impact,estimated_cost,timing,confidence,status
+DEMO-F-001,Cybersecurity,Demo privileged-access control gap,High,Potential unauthorized administrative activity,Requires pre-close validation,450000,Day 100,Medium,Open
+DEMO-F-002,Applications,Demo legacy platform nearing end of support,Medium,Operational support risk,Integration sequencing dependency,900000,Long Term,High,Open
