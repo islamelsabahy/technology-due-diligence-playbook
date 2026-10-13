@@ -42,4 +42,4 @@ Scope → Data Request → Management Interviews → Domain Assessment → Evide
 10. Public examples use fictional data only.
 
 ## Author
-Eng. Islam El Sherbiny
+Eng. Islam El-Sherbiny
