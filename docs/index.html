@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tech Due Diligence · الفحص التقني النافي للجهالة</title>
+<link rel="stylesheet" href="app/style.css">
+<style>.qrow{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}@media(max-width:600px){.qrow{grid-template-columns:minmax(0,1fr)}}
+details.dim{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:8px}details.dim summary{cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.grade{font-size:52px;font-weight:800;line-height:1;border:3px solid currentColor;border-radius:12px;padding:6px 18px;display:inline-block}
+.g-A,.g-B{color:var(--grn)}.g-C{color:var(--amb)}.g-D,.g-E{color:var(--red)}.crit{color:var(--red)}.crit b{color:var(--red)}.star{color:var(--red)}</style>
+</head>
+<body>
+<header>
+  <div><h1 id="t_title"></h1><p class="sub" id="t_sub"></p></div>
+  <div class="row noprint"><button class="g" id="lang"></button><button class="g" id="share"></button><button class="g" id="csv"></button><button class="g" id="prn"></button></div>
+</header>
+<main>
+  <section class="card">
+    <h2 id="t_deal"></h2>
+    <div class="row">
+      <div class="f"><label id="t_target"></label><input id="target" maxlength="80"></div>
+      <div class="f"><label><span id="t_size"></span> <span id="q_size"></span></label><select id="size"></select></div>
+      <div class="f"><label><span id="t_run"></span> <span id="q_run"></span></label><input type="number" min="0" step="100000" id="run"><span class="u" id="u_run"></span></div>
+      <div class="f"><label><span id="t_rev"></span> <span id="q_rev"></span></label><input type="number" min="0" step="1000000" id="rev"><span class="u" id="u_rev"></span></div>
+      <div class="f noprint"><label id="t_demo"></label><select id="demo"></select></div>
+    </div>
+    <p class="note" id="t_scale"></p>
+  </section>
+  <section class="card noprint"><h2 id="t_q"></h2><div id="qs"></div></section>
+  <section class="card">
+    <h2 id="t_res"></h2>
+    <div class="row" style="align-items:center;gap:20px"><div id="grade"></div><div class="kpis" id="kpis" style="flex:1"></div></div>
+  </section>
+  <div class="grid2">
+    <section class="card"><h2 id="t_dom"></h2><div class="tw"><table id="dom"></table></div></section>
+    <section class="card"><h2 id="t_prot"></h2><ul class="tight" id="prot"></ul></section>
+  </div>
+  <section class="card"><h2 id="t_flags"></h2><div class="tw"><table id="flags"></table></div></section>
+  <section class="card"><h2 id="t_plan"></h2><div id="plan"></div></section>
+  <section class="card noprint" id="ai"></section>
+  <p class="note" id="t_disc" style="text-align:center"></p>
+</main>
+<footer>Islam El-Sherbiny · <a href="https://github.com/islamelsabahy/technology-due-diligence-playbook">GitHub · playbook</a></footer>
+<script src="app/kit.js"></script><script src="app/ai.js"></script><script src="app/dd.js"></script>
+<script>
+"use strict";
+var T={ar:{title:"الفحص التقني قبل الاستثمار أو الاستحواذ",sub:"قبل ما تشتري شركة أو تستثمر فيها: 32 نقطة فحص بتطلع درجة مخاطر تقنية، علامات تحذير، تكلفة الإصلاح، وإيه تطلبه في العقد.",deal:"الصفقة",target:"اسم الشركة المستهدفة (اختياري، مش بيترفع)",size:"حجم الشركة",run:"تكلفة التقنية السنوية الحالية",rev:"إيرادات الشركة السنوية",demo:"مثال جاهز",scale:"لكل نقطة: 4 موجود ومعاه دليل، 3 موجود بالكلام بس، 2 جزئي، 1 مش موجود، 0 مش معروف. الكلام من غير دليل بيقلل الثقة، والمجهول بيتحسب مخاطرة.",q:"نقاط الفحص",res:"النتيجة",dom:"المخاطر حسب المجال",prot:"إيه تطلبه في العقد",flags:"سجل علامات التحذير",plan:"خطة الإصلاح",disc:"أداة استرشادية ببيانات تدخلها أنت. التكاليف تقديرية، ومش استشارة قانونية.",
+ share:"نسخ رابط النتيجة",copied:"اتنسخ ✓",csv:"تصدير CSV",prn:"طباعة / PDF",risk:"درجة المخاطر",conf:"ثقة الأدلة",once:"إصلاح لمرة واحدة",rec:"زيادة التكلفة السنوية",adj:"تخفيض السعر المقترح",norm:"التكلفة السنوية الطبيعية",ratio:"التقنية ÷ الإيرادات",egp:"ج.م",egpy:"ج.م / سنة",domain:"المجال",item:"البند",sev:"الخطورة",val:"يحتاج تحقق",yes:"نعم",cost:"التكلفة",
+ ans:["0 · مش معروف","1 · مش موجود","2 · جزئي","3 · موجود بالكلام","4 · موجود بدليل"],
+ sizes:{small:"صغيرة (أقل من 100 موظف)",medium:"متوسطة (100–500)",large:"كبيرة (أكتر من 500)"},
+ sevs:{Critical:"حرجة",High:"عالية",Medium:"متوسطة"},
+ plans:{d1:"قبل التوقيع / اليوم الأول",d100:"أول 100 يوم",later:"على المدى الأطول"},
+ prots:{cp:"شرط مسبق للتوقيع: إصلاح العلامات الحرجة أو إثباتها قبل الإغلاق.",price:"تخفيض في السعر يغطي الإصلاح لمرة واحدة + سنتين من زيادة التكلفة السنوية.",escrow:"احتجاز جزء من الثمن (escrow) لحد ما الأدلة الناقصة تتقدم، لأن ثقة الأدلة أقل من 60%.",retention:"خطة احتفاظ بالأشخاص الأساسيين في التقنية وتسليم المعرفة قبل الإغلاق.",indemnity:"تعهد وتعويض من البايع عن أي غرامات تراخيص سابقة."},
+ none:"لا توجد",missing:"ناقص:",unproven:"مش مُثبت بدليل:",demos:{"":"—",clean:"شركة منظمة",typical:"شركة متوسطة",risky:"شركة عالية المخاطر"},
+ hsize:"بيضرب في التكاليف التقديرية (صغيرة ×1، متوسطة ×2.5، كبيرة ×6).",hrun:"إجمالي المصروف السنوي على التقنية (رواتب، تراخيص، استضافة، دعم).",hrev:"اختياري: عشان نحسب نسبة التقنية من الإيرادات."},
+ en:{title:"Technology due diligence before you invest or acquire",sub:"Before buying or investing in a company: 32 checks that give a technology risk grade, red flags, remediation cost and what to ask for in the contract.",deal:"Deal",target:"Target company (optional, never uploaded)",size:"Company size",run:"Current annual IT run-rate",rev:"Annual revenue",demo:"Example",scale:"For each check: 4 in place with evidence, 3 claimed only, 2 partial, 1 missing, 0 unknown. Claims without evidence lower confidence; unknowns count as risk.",q:"Checks",res:"Result",dom:"Risk by domain",prot:"What to ask for in the contract",flags:"Red flag register",plan:"Remediation plan",disc:"Indicative tool driven by your inputs. Costs are estimates; not legal advice.",
+ share:"Copy result link",copied:"Copied ✓",csv:"Export CSV",prn:"Print / PDF",risk:"Risk score",conf:"Evidence confidence",once:"One-time remediation",rec:"Annual cost uplift",adj:"Suggested price adjustment",norm:"Normalized annual run-rate",ratio:"IT ÷ revenue",egp:"EGP",egpy:"EGP / year",domain:"Domain",item:"Item",sev:"Severity",val:"Validate",yes:"Yes",cost:"Cost",
+ ans:["0 · Unknown","1 · Missing","2 · Partial","3 · Claimed only","4 · In place, evidenced"],
+ sizes:{small:"Small (<100 staff)",medium:"Medium (100–500)",large:"Large (>500)"},
+ sevs:{Critical:"Critical",High:"High",Medium:"Medium"},
+ plans:{d1:"Before signing / Day 1",d100:"First 100 days",later:"Longer term"},
+ prots:{cp:"Condition precedent: fix or evidence the critical red flags before closing.",price:"Price adjustment covering one-time remediation plus two years of the annual cost uplift.",escrow:"Hold back part of the price in escrow until missing evidence is provided (evidence confidence below 60%).",retention:"Retention plan for key technology people and knowledge transfer before closing.",indemnity:"Seller warranty and indemnity for any past licence non-compliance."},
+ none:"None",missing:"Missing:",unproven:"Not evidenced:",demos:{"":"—",clean:"Well-run company",typical:"Typical company",risky:"High-risk company"},
+ hsize:"Multiplies the indicative costs (small ×1, medium ×2.5, large ×6).",hrun:"Total annual technology spend (salaries, licences, hosting, support).",hrev:"Optional: used for the IT-to-revenue ratio."}};
+var $=function(i){return document.getElementById(i)},t=function(k){return T[Kit.lang][k]},L=function(){return Kit.lang==="ar"?6:7};
+var A={},S={size:"medium",run:3000000,rev:120000000},R=null;
+var DEMO={clean:4,typical:[4,3,1,2,3,1,1,2,2,3,2,1,3,2,3,2,2,4,1,4,3,2,2,3,1,0,3,2,4,1,2,1],risky:[1,0,1,1,0,1,1,1,0,1,0,1,1,3,1,1,0,1,2,1,1,1,3,0,0,1,1,1,1,0,1,0]};
+function setDemo(k){D_=DEMO[k];if(D_===undefined)return;DD.CHECKS.forEach(function(c,i){A[c.id]=typeof D_==="number"?D_:(D_[i]||0)})}var D_;
+(function(){var h=location.hash.slice(1);if(/^[0-4]{20,}/.test(h)){DD.CHECKS.forEach(function(c,i){A[c.id]=+h.charAt(i)||0});var m=/size=(\w+)/.exec(h);if(m&&DD.SIZES[m[1]])S.size=m[1]}else setDemo("typical")})();
+function cname(id){var c=DD.CHECKS.filter(function(x){return x.id===id})[0];return c[Kit.lang]}
+function dname(id){return DD.DOMAINS.filter(function(d){return d.id===id})[0][Kit.lang]}
+function M(x){return Kit.fmt(x)}
+function buildQs(){$("qs").innerHTML=DD.DOMAINS.map(function(d,j){return '<details class="dim"'+(j===0?" open":"")+'><summary><b>'+d[Kit.lang]+'</b><span class="pill" id="ds_'+d.id+'"></span></summary>'+d.c.map(function(c){return '<div class="qrow"><div>'+(c[2]?'<span class="star" title="critical">★ </span>':'')+Kit.esc(c[L()])+'</div><select data-c="'+c[0]+'">'+t("ans").map(function(a,v){return '<option value="'+v+'"'+(A[c[0]]===v?" selected":"")+'>'+a+'</option>'}).join("")+'</select></div>'}).join("")+'</details>'}).join("")}
+function cls(r){return r<35?"ok":r<55?"warn":"bad"}
+function calc(){R=DD.assess(A,{size:S.size,run_rate:S.run,revenue:S.rev});
+ DD.DOMAINS.forEach(function(d){var e=$("ds_"+d.id);if(e){e.textContent=Math.round(R.domains[d.id].risk);e.className="pill "+cls(R.domains[d.id].risk)}});
+ $("grade").innerHTML='<span class="grade g-'+R.grade+'">'+R.grade+'</span>';
+ $("kpis").innerHTML=[[t("risk"),Math.round(R.risk)+"/100"],[t("conf"),Math.round(R.confidence)+"%"],[t("once"),M(R.one_time)],[t("rec"),M(R.recurring)],[t("adj"),M(R.price_adjustment)],[t("norm"),M(R.normalized_run_rate)],[t("ratio"),R.it_cost_to_revenue===null?"—":(R.it_cost_to_revenue*100).toFixed(1)+"%"]].map(function(x){return '<div class="kpi"><span>'+x[0]+'</span><b style="font-size:19px">'+x[1]+'</b></div>'}).join("");
+ $("dom").innerHTML='<tr><th class="n">'+t("domain")+'</th><th>'+t("risk")+'</th><th></th><th>'+t("conf")+'</th></tr>'+DD.DOMAINS.map(function(d){var x=R.domains[d.id];return '<tr><td class="n">'+d[Kit.lang]+'</td><td class="'+cls(x.risk)+'">'+Math.round(x.risk)+'</td><td><div class="bar"><i style="width:'+x.risk.toFixed(0)+'%;background:var(--red)"></i></div></td><td>'+Math.round(x.confidence)+'%</td></tr>'}).join("");
+ $("prot").innerHTML=R.protections.length?R.protections.map(function(p){return '<li>'+t("prots")[p]+'</li>'}).join(""):'<li class="ok">'+t("none")+'</li>';
+ $("flags").innerHTML=R.flags.length?'<tr><th class="n">'+t("sev")+'</th><th class="n">'+t("domain")+'</th><th class="n">'+t("item")+'</th><th>'+t("val")+'</th></tr>'+R.flags.map(function(f){return '<tr><td class="n '+(f.severity==="Critical"?"bad":f.severity==="High"?"warn":"")+'">'+t("sevs")[f.severity]+'</td><td class="n">'+dname(f.domain)+'</td><td class="w">'+'<span class="note">'+(f.severity==="Medium"?t("unproven"):t("missing"))+'</span> '+Kit.esc(cname(f.id))+'</td><td>'+(f.validate?"⚑ "+t("yes"):"")+'</td></tr>'}).join(""):'<tr><td class="ok">'+t("none")+'</td></tr>';
+ $("plan").innerHTML=["d1","d100","later"].map(function(p){var it=R.plan[p];if(!it.length)return "";return '<h3>'+t("plans")[p]+'</h3><div class="tw"><table><tr><th class="n">'+t("item")+'</th><th>'+t("once")+'</th><th>'+t("rec")+'</th></tr>'+it.map(function(x){return '<tr><td class="w">'+Kit.esc(cname(x.id))+'</td><td>'+M(x.once)+'</td><td>'+M(x.rec)+'</td></tr>'}).join("")+'</table></div>'}).join("");
+ history.replaceState(null,"","#"+DD.CHECKS.map(function(c){return A[c.id]||0}).join("")+"&size="+S.size)}
+function render(){Kit.setLang(Kit.lang);["title","sub","deal","target","size","run","rev","demo","scale","q","res","dom","prot","flags","plan","disc","share","csv","prn"].forEach(function(k){var e=$("t_"+k)||$(k);if(e&&e.tagName!=="INPUT"&&e.tagName!=="SELECT")e.textContent=t(k)});
+ $("lang").textContent=Kit.lang==="ar"?"EN":"ع";$("q_size").innerHTML=Kit.q(t("hsize"));$("q_run").innerHTML=Kit.q(t("hrun"));$("q_rev").innerHTML=Kit.q(t("hrev"));$("u_run").textContent=t("egpy");$("u_rev").textContent=t("egpy");
+ $("size").innerHTML=Object.keys(DD.SIZES).map(function(k){return '<option value="'+k+'"'+(k===S.size?" selected":"")+'>'+t("sizes")[k]+'</option>'}).join("");
+ $("run").value=S.run;$("rev").value=S.rev;$("demo").innerHTML=Object.keys(T.ar.demos).map(function(k){return '<option value="'+k+'">'+t("demos")[k]+'</option>'}).join("");
+ buildQs();calc();AI.render()}
+document.addEventListener("change",function(e){var el=e.target;if(el.dataset.c){A[el.dataset.c]=+el.value;calc()}else if(el.id==="size"){S.size=el.value;calc()}else if(el.id==="demo"){setDemo(el.value);buildQs();calc()}});
+document.addEventListener("input",function(e){var el=e.target;if(el.id==="run"||el.id==="rev"){S[el.id]=Math.max(0,+el.value||0);calc()}});
+$("lang").onclick=function(){Kit.lang=Kit.lang==="ar"?"en":"ar";render()};$("prn").onclick=function(){print()};
+$("share").onclick=function(){var b=this;try{navigator.clipboard.writeText(location.href).then(function(){b.textContent=t("copied");setTimeout(function(){b.textContent=t("share")},1500)})}catch(e){}};
+$("csv").onclick=function(){var rows=[["type","domain","item","answer","severity_or_cost"]];DD.CHECKS.forEach(function(c){rows.push(["check",c.domain,c.en,A[c.id]||0,""])});R.flags.forEach(function(f){rows.push(["flag",f.domain,cname(f.id),"",f.severity])});rows.push(["total","","one_time_egp","",Math.round(R.one_time)],["total","","recurring_egp","",Math.round(R.recurring)],["total","","price_adjustment_egp","",Math.round(R.price_adjustment)],["total","","grade","",R.grade]);Kit.csv(rows,"tech-due-diligence.csv")};
+var AI=AIPanel.mount($("ai"),{lang:function(){return Kit.lang},system:"You are a technology due diligence advisor writing for an investor or acquirer in Egypt.",prompt:function(){var s=["Company size: "+S.size+"; IT run-rate EGP "+S.run+"; revenue EGP "+S.rev,"Grade "+R.grade+", risk "+Math.round(R.risk)+"/100, evidence confidence "+Math.round(R.confidence)+"%","One-time remediation EGP "+Math.round(R.one_time)+"; annual uplift EGP "+Math.round(R.recurring)+"; suggested price adjustment EGP "+Math.round(R.price_adjustment)];DD.DOMAINS.forEach(function(d){s.push(d.en+": risk "+Math.round(R.domains[d.id].risk)+", confidence "+Math.round(R.domains[d.id].confidence)+"%")});R.flags.forEach(function(f){s.push("Red flag ("+f.severity+(f.validate?", needs validation":"")+"): "+DD.CHECKS.filter(function(c){return c.id===f.id})[0].en)});s.push("Protections: "+R.protections.map(function(p){return T.en.prots[p]}).join(" "));s.push("Write the executive section of a technology due diligence report: headline conclusion, deal-breakers vs fixable issues, cost to fix, contract protections, Day 1 and Day 100 priorities, and the evidence still to request from the seller.");return s.join("\n")}});
+Kit.initTips();render();
+</script>
+</body>
+</html>

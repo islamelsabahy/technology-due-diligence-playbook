@@ -6,6 +6,22 @@ It covers infrastructure, applications, architecture, cybersecurity, cloud, data
 
 All examples are fictional.
 
+## Interactive scorer / أداة الفحص التفاعلية
+
+**Live:** https://islamelsabahy.github.io/technology-due-diligence-playbook/
+
+The playbook below now has a working tool for investors and acquirers:
+
+- **32 checks across 10 domains**, from infrastructure, applications and cybersecurity through to ERP, AI, vendors and team. Each answer is *evidenced*, *claimed only*, *partial*, *missing* or *unknown*: claims without evidence lower confidence, and unknowns count as risk.
+- **Risk grade A–E**, risk per domain and an **evidence-confidence** score.
+- **Red-flag register:** critical checks that fail become Critical or High findings, flagged for validation when the evidence is weak.
+- **Remediation cost:** one-time and annual uplift, scaled by company size. It also gives the **normalized IT run-rate**, IT-to-revenue, and a **suggested price adjustment** (one-time plus two years of uplift).
+- **Contract protections:** condition precedent, price adjustment, escrow, key-person retention, licence indemnity.
+- **Day 1 / Day 100 / longer-term plan.**
+- **Shareable result link, Arabic/English, CSV, print to PDF.** Optional AI layer: paste your own Anthropic API key to draft the executive section of the DD report (the key is never stored).
+
+Engine: `docs/app/dd.js` (checks, weights and costs as plain data). Tests: `node tests/test_dd.js`. Costs are indicative bands; edit them in the engine to match your market.
+
 ## Core Areas
 - Diligence scope & request list
 - Infrastructure
